@@ -4,10 +4,8 @@ import matplotlib.pyplot as plt
 deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 points=0
 results=[]
-resultsGrouped=[]
 gx=[]
 gy=[]
-resultsGroupedLearn=[]
 hashtable={}
 
 def drawCard():
@@ -73,7 +71,6 @@ for c in range(100):
             hashtable[str(playerHand),randomHit]=x
         else:
             hashtable[str(playerHand),randomHit]=reward
-    resultsGrouped.append([c,points])
     gx.append([c])
     gy.append(points)
 plt.plot(gx, gy)
@@ -88,7 +85,6 @@ for c in range(100):
     for i in range(1000):
         reward=playGameLearning()
         points=points+reward
-    resultsGroupedLearn.append([c,points])
     gy.append(points)
 plt.plot(gx, gy)
 plt.ylabel("Points")
