@@ -7,7 +7,7 @@ results=[]
 gx=[]
 gy=[]
 hashtable={}
-
+totalpoints=0
 def drawCard():
     return int(random.choice(deck))
 
@@ -71,6 +71,7 @@ for c in range(100):
             hashtable[str(playerHand),randomHit]=x
         else:
             hashtable[str(playerHand),randomHit]=reward
+    
     gx.append([c])
     gy.append(points)
 plt.plot(gx, gy)
@@ -80,14 +81,44 @@ plt.title("Black Jack - Random Chance")
 plt.show()
 gy=[]
 
+
+
+def playGamePresetHand(randomHit,playerHand):
+    dealerHand=drawDeck()
+    if randomHit==1:
+        playerHand.append(drawCard())
+    if isBust(playerHand):
+        return -1,playerHand,randomHit
+    while sumHand(dealerHand)<17:
+        dealerHand.append(drawCard())
+    reward=compareHands(playerHand,dealerHand)
+    return reward,playerHand,randomHit
+for t in range(1000):
+    for c in deck:
+        for e in deck:
+            playerHand=[c,e]
+            reward,playerHand,randomHit=playGamePresetHand(random.getrandbits(1),playerHand)
+            results.append([reward,playerHand,randomHit])
+            points=points+reward
+            playerHand=[playerHand[0],playerHand[1]]
+            if tuple([str(playerHand),randomHit]) in hashtable:
+                x= hashtable[str(playerHand),randomHit]
+                x=x+reward
+                hashtable[str(playerHand),randomHit]=x
+            else:
+                hashtable[str(playerHand),randomHit]=reward
+
 for c in range(100):
     points=0
     for i in range(1000):
         reward=playGameLearning()
         points=points+reward
+    gx.append([c])
     gy.append(points)
+    totalpoints=totalpoints+points
 plt.plot(gx, gy)
 plt.ylabel("Points")
 plt.xlabel("Games Played (1000x)")
-plt.title("Black Jack - Basic Learning")
+plt.title("Black Jack - Basic Learning (pre-set Hands)")
 plt.show()
+print(totalpoints/100)
